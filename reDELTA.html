@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--CSS-->
+    <style>
+        input:focus,
+select:focus,
+textarea:focus{
+    outline: none;
+}
+
+
+:root {
+    --reveal: hsl(0, 100%, 50%);
+    --whatisit: rgba(0, 255, 255, 0.814);
+    --overlay-blend: multiply;
+    --overlay-opacity: .8;
+  }
+
+#textarea{
+    font-family: 'Jost', sans-serif;
+    margin-right: 50px;
+    border-style: none;
+    resize: none;
+    text-align: center ;
+    font-size: 1em;
+    align-content: center;
+    font-family: sans-serif;
+    line-height: 1.5;
+    width: 75vw;
+    height: 90vh;
+    z-index: 2;
+    color: var(--whatisit);
+    mix-blend-mode: var(--overlay-blend);
+    opacity: var(--overlay-opacity);
+  
+}
+
+.sidenav {
+    height: 100%;
+    width: 140px;
+    position: fixed;
+    z-index: 1;
+    margin-left: 10%;
+    right: 0;
+    background-color: rgba(17, 17, 17, 0);
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+
+  @media screen and (max-height: 450px) {
+    #textarea{padding-left: 10px;}
+
+  }
+
+  #logo{
+    letter-spacing: 10px;
+    font-family: 'Jost', sans-serif;
+    font-weight: bold;
+    text-shadow: 2px 2px #ff0000;
+    font-size: 50pt;
+    transform: rotate(-90deg);
+    padding-right: 50%;
+    margin-top: 45%;
+    text-align: center;
+    z-index: 1;
+    color: white;
+    border-style: none;
+    opacity: 0.8;
+}
+
+#spacer{
+    font-family: 'Jost', sans-serif;
+    font-weight: light;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+  
+    z-index: 1;
+    margin-top: 30%;
+    margin-bottom: 30%;
+    margin-left: 30px;
+    color: white;
+    border-style: none;
+    border-radius: 20px;
+}
+
+
+.btn{
+  width: 80%;
+  transform: translateX(15%);
+    font-family: 'Jost', sans-serif;
+    background-color: var(--reveal);
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    color: white;
+    border-style: none;
+    padding: 10%;
+}
+
+
+.box{
+  width: 80%;
+  transform: translateX(15%);
+    font-family: 'Jost', sans-serif;
+    background-color: var(--reveal);
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    color: white;
+    border-style: none;
+    padding: 10%;
+}
+
+.btn:hover{
+  background-color: #e6000f;
+}
+
+.btn:active{
+  
+  color: black;
+  background-color: var(--whatisit);
+}
+
+.hold{
+  background-color: #ff0000;
+  mix-blend-mode: var(--overlay-blend);
+}
+
+  .centered{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  
+  .noise {
+    --start: 5px;
+    --end: 7px;
+    background: 
+      repeating-linear-gradient(155deg,
+        transparent 0, 
+        transparent var(--start), 
+        var(--reveal) var(--start), 
+        var(--reveal) var(--end)),
+      repeating-linear-gradient(115deg,
+        transparent 0, 
+        transparent var(--start), 
+        var(--reveal) var(--start), 
+        var(--reveal) var(--end)),
+      repeating-linear-gradient(45deg,
+        transparent 0, 
+        transparent var(--start), 
+        var(--reveal) var(--start), 
+        var(--reveal) var(--end));
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    color: var(--reveal);
+    opacity: .5;
+    animation: noise 5s infinite;
+  }
+  @keyframes noise {
+    0% {top: -25px;}
+    50% {top: 0px;}
+    100% {top: -25px;}
+  }
+    </style>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REΔ</title>
+
+    <!--JAVASCRIPT-->
+    <script>
+      let loadcheck = 0;
+
+        function redfilter(){
+          document.getElementById("cente").classList.toggle("hold");
+        }
+
+        function cleartxt(){
+          document.getElementById("textarea").value = "";
+        }
+
+        function explain(){
+          document.getElementById("textarea").innerHTML = "";
+          redfilter();
+          if (loadcheck == 1) {
+            location.reload();
+          }
+          document.getElementById("textarea").innerHTML = "This is a red reveal based obfuscation writing window.\n\n You can use it to write in public places where you would rather people could not easily see what you are typing. \n\n It is based on the concept of a red reveal. There are three components, a text box with cyan text, an animated obfuscation texture, and the red overlay filter. The translucent cyan font is difficult to identify when blended with the red texture. Overlaying a red filter will block out the red colours onscreen, revealing your text. \n\n This can be done with the onscreen button, by utilising a device level colour shift (look in Accessibility settings) or even by wearing red glasses.\n\n You can toggle the animation, increase the font size and toggle the red filter using the buttons on the right. \n\n There is also a button to copy text to the device clipboard. REΔ has no storage capacity, does not send or save your text, and can be run locally using a single .html file. Please write what you need to, then copy and paste it somewhere else. \n\n  This is a proof of concept, and is not meant to be used for anything serious, it is also not to be used for anything illegal. \n\n Delete this text and give it a go!";
+          document.getElementById("textarea").focus();
+          loadcheck = 1;
+        }
+
+        function pause() {
+            const running = document.getElementById("noise").style.animationPlayState === 'running';
+            document.getElementById("noise").style.animationPlayState = running ? 'paused' : 'running';
+            console.log("Animation Toggled");
+        }
+
+        function textsize() {
+            //make the text size smaller if it's large
+            if (document.getElementById("textarea").style.fontSize === "2em") {
+                document.getElementById("textarea").style.fontSize = "1em";
+                console.log("Text Size Decreased");
+            }
+        //make the text size larger if it's small
+            else if (document.getElementById("textarea").style.fontSize === "1em") {
+                document.getElementById("textarea").style.fontSize = "2em";
+                console.log("Text Size Increased");
+            }
+            
+            //make the text size normal if it's not large or small
+            else {
+                document.getElementById("textarea").style.fontSize = "1em";
+                console.log("Text Size Normalized");
+            }
+        }
+
+
+
+        function copyToClipboard() {
+            // Get the text field
+            var copyText = document.getElementById("textarea");
+
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value);
+
+            // Alert the copied text
+            console.log("Text Copied");
+
+
+        }</script>
+
+</head>
+
+
+<body>
+    <div class="sidenav">
+        <p id="logo">REΔ</p>
+        <div id="spacer"></div>
+        <button class="btn" id="copy" onclick="copyToClipboard()">Copy to Clipboard</button>
+        <button class="btn" id="copy" onclick="cleartxt()">Clear Text</button>
+        <button class="btn" id="pause" onclick="pause()">Toggle Background Animation</button>
+        <button class="btn" id="textsize" onclick="textsize()">Toggle Larger Text Size</button>
+        <button class="btn" id="textsize" onclick="redfilter()">Toggle Red Filter</button>
+        <button class="btn" id="textsize" onclick="explain()"><b>REΔ?</b></button>
+
+    </div>
+
+    <div id="redoverlay"></div>
+    <div class="centered" id="cente">
+        <textarea id="textarea"></textarea>
+        <div class="noise" id="noise"></div>
+    </div>
+    <script>
+      document.getElementById("textarea").focus();
+    </script>
+
+
+</body>
+
+</html>
