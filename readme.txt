@@ -7,6 +7,3 @@ https://danielcwilson.com
 
 The Red Reveal: Illusions on the Web Part 1
 https://danielcwilson.com/blog/2018/02/optical-fun-red-reveal/
-
-DEARG means red in Irish
-https://www.focloir.ie/en/dictionary/ei/red
