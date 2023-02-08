@@ -7,17 +7,12 @@
     <title>NFC-Read</title>
 </head>
 <body>
-<?php
-$nfc = $_GET['nfc'];
-echo $nfc;
 
-?>
-
-
-
-
-
-
+<script>
+var nfc = location.search.split('nfc=')[1]
+document.write ("<h1>Hello " + nfc + "</h1>)
+console.log(nfc)
+</script>
     
 </body>
 </html>
