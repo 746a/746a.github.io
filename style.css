@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+body {
+    background-color: #f1cd87;
+    color: #353535;
+    margin-left: 5%;
+    
+}
+h1 {
+    font-size: 5em;
+    font-family: 'Unbounded', cursive;
+    text-align: center;
+}
+
+h2{
+    font-family: 'Unbounded', cursive;
+    text-align: left;
+    font-size: 3em;
+    color: salmon;
+}
+a {
+    font-family: 'JetBrains Mono', monospace;
+    color: #353535;
+    line-height: 2em;
+    font-size: 1.5em;
+    text-decoration: none;
+    padding: .5%;
+}
+a:hover {
+    color: rgb(255, 255, 255);
+    background-color: #353535;
+    border-radius: 5px;
+    padding: .5%;
+    transition: .5s ease-in-out;
+}
