@@ -1,4 +1,4 @@
-A series of experiements and explorations.
+A series of experiments and explorations.
 
 
 > NFC-Read
