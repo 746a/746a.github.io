@@ -4,6 +4,9 @@ A series of experiments and explorations.
 · NFC URL Reader - An experiment in NFC chip URL customisation
 · REΔ - A red reveal text obfuscation writing window.
 
+2024
+· colossOS - A fictional operating system for a giant computer (WIP)
+
 2025
 · S.C.R.I.P.T.S - Standard Creation of Repeatable Instructions and Procedure Templates System
 
