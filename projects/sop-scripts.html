@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.C.R.I.P.T.S – Standard Creation of Repeatable Instructions and Procedure Templates System</title>
+    <style>
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 400;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        textarea,
+        input {
+            width: 100%;
+            padding: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.5em;
+            background-color: #0000ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0000ff;
+        }
+
+        #output {
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+
+        .acronym {
+            font-size: 1.5em;
+            text-decoration: underline;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 5em;
+            color: #000000;
+            margin-bottom: -10px;
+            font-family: Arial, Helvetica, sans-serif;
+            
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.8em;
+            font-family: Arial, Helvetica, sans-serif;
+            margin-bottom: 15%;
+        }
+
+        input {
+            font-size: 1em;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            font-size: 1em;
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            resize: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-top: 10px;
+            font-family: Arial, Helvetica, sans-serif
+        }
+
+        #output {
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">S.C.R.I.P.T.S</h1>
+        <h4 class="subtitle"><span class="acronym">S</span>tandard <span class="acronym">C</span>reation of <span
+                class="acronym">R</span>epeatable <span class="acronym">I</span>nstructions and <span
+                class="acronym">P</span>rocedure <span class="acronym">T</span>emplates <span
+                class="acronym">S</span>ystem</h4>
+                
+
+        <div class="field">
+            <label for="title">Title</label>
+            <input type="text" id="title" placeholder="What is the name of the procedure?">
+        </div>
+        <br>
+        <div class="field">
+            <label for="author">Author</label>
+            <input type="text" id="author" placeholder="Your name or initials.">
+        </div>
+        <br>
+        <div class="field">
+            <label for="bizArea">Business Area</label>
+            <input type="text" id="bizArea" placeholder="Business area acronym (optional)">
+        </div>
+        <br>
+        <div class="field">
+            <label for="SOP Number">SOP Number</label>
+            <input type="text" id="sopNum" placeholder="Sequential SOP number (optional)">
+        </div>
+        <br>
+        <div class="field">
+            <label for="purpose">Purpose</label>
+            <textarea id="purpose" placeholder="Describe the purpose in one sentence."></textarea>
+        </div>
+        <br>
+        <div class="field">
+            <label for="scope">Scope</label>
+            <textarea id="scope" placeholder="Define the scope, who does this impact or involve?"></textarea>
+        </div>
+        <br>
+        <div class="field">
+            <label for="responsibilities">Responsibilities</label>
+            <textarea id="responsibilities" placeholder="Who is responsible for what? Roles not names."></textarea>
+        </div>
+        <br>
+        <div class="field">
+            <label for="procedures">Procedures</label>
+            <textarea id="procedures"
+                placeholder="Detail the procedures in simple bullet points one per line."></textarea>
+        </div>
+        <br>
+        <div class="field">
+            <label for="references">References</label>
+            <textarea id="references" placeholder="List references or useful links (if any)"></textarea>
+        </div>
+        <br>
+        <button onclick="generateSOP()">Generate SOP</button>
+        <div id="output"></div>
+
+        <!-- Download Button (Initially Disabled) -->
+        <button id="downloadBtn" style="display: none;" disabled>Download SOP as .txt</button>
+    </div>
+
+    <script>
+        function generateSOP() {
+            const title = sanitizeInput(document.getElementById("title").value);
+            const author = sanitizeInput(document.getElementById("author").value);
+            const sopNum = sanitizeInput(document.getElementById("sopNum").value);
+            const bizArea = sanitizeInput(document.getElementById("bizArea").value);
+            const purpose = sanitizeInput(document.getElementById("purpose").value);
+            const scope = sanitizeInput(document.getElementById("scope").value);
+            const responsibilities = sanitizeInput(document.getElementById("responsibilities").value);
+            const procedures = sanitizeInput(document.getElementById("procedures").value);
+            const references = sanitizeInput(document.getElementById("references").value);
+            const dateCreated = new Date().toISOString().split('T')[0];
+
+            const sop = `
+······························································
+Standard Operating Procedure (SOP)
+······························································
+
+Title: ${title}
+Author: ${author}
+Shortcode: ${bizArea}-${sopNum}
+
+······························································
+
+Purpose:
+    
+${purpose}
+
+······························································
+    
+Scope:
+
+${scope}
+
+······························································
+    
+Responsibilities:
+
+${responsibilities}
+
+······························································
+    
+Procedure:
+
+${procedures}
+
+······························································
+    
+References:
+
+${references}
+    
+······························································
+Created: ${dateCreated} by ${author}
+Last Update: v1-${dateCreated} by ${author}
+······························································
+            `;
+
+            // Display SOP on the page
+            const output = document.getElementById("output");
+            output.textContent = sop.trim();
+
+            // Scroll to the output area
+            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+
+            // Enable the download button after generating SOP
+            const downloadButton = document.getElementById("downloadBtn");
+            downloadButton.style.display = "block"; // make the button visible
+            downloadButton.disabled = false; // enable the button
+            downloadButton.onclick = () => downloadFile(sop.trim(), title, dateCreated); // Pass title and dateCreated to download function
+        }
+
+        // Sanitize user input to prevent XSS attacks
+        function sanitizeInput(input) {
+            const element = document.createElement('div');
+            element.innerText = input;  // Automatically escapes HTML special characters
+            return element.innerHTML;  // Returns the sanitized version
+        }
+        
+
+        // Function to trigger file download with dynamic filename
+        function downloadFile(content, title, dateCreated) {
+            const safeTitle = title.replace(/[^a-zA-Z0-9]/g, "_"); // Replace non-alphanumeric characters with underscores
+            const filename = `${bizArea}${sopNum}-${safeTitle}-${dateCreated}.txt`; // Create the filename based on title and date
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;  // Dynamic filename generated above
+            link.click();  // Trigger the download
+        } 
+    </script>
+
+
+</body>
+
+</html>
