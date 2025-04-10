@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <title>Planetary Network Access Terminal</title>
+
+    <script src="scripts.js" defer></script>
+
+</head>
+
+<body>
+
+    <div class="screen">
+
+        <div id="scanlines" class="scan-lines"></div>
+        <div id="vignette" class="vignette-overlay"></div>
+
+        <div class="infobox">
+            <span id="a746">746a Industries | <button id="amber" class="info-button">Amber</button>
+            <button id="emerald" class="info-button clicked">Emerald</button>
+            <button id="sapphire" class="info-button">Sapphire</button>
+            <button id="garnet" class="info-button">Garnet</button> | 
+            <br></span>
+            <span id="planet" >Planetary Network (<b>PlaNET</b>) Access Terminal Version 1.0  
+            <br> </span>
+            <span id="shell">Insecure Shell Access - Granted |
+            <button id="saveData" class="info-button">Save Data</button> |
+            <button id="clearData" class="info-button">Clear Data</button> |
+            <button id="terminalMode" class="info-button">Terminal</button> |
+            <button id="hack" class="info-button">Hack</button> </span>
+        </div>
+        <div class="brackets">========================================</div>
+        <textarea type="text" id="tb1" class="txt" placeholder="> Welcome, Wanderer..."></textarea>
+    </div>
+
+
+</body>
+
+</html>
