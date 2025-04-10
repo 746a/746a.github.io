@@ -1,59 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>746a Projects</title>
+    <title>746a</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
+    <script src="js/main.js"></script>
+    <script src="js/utils.js"></script>
 
-        .title {
-            color: #ffffff;
-            background-color: #0000ff;
-            padding: 10px;
-            text-align: center;
-            width: 100%;
-            font-size: 5em;
-            font-weight: 900;
-        }
+    <div class="menu-bar">
+        <a href="index.html"><span>746a</span></a>
+        <a href="#" onclick="openWindow('window2')">About</a>
+        <a href="#" onclick="openWindow('window3')">Projects</a>
+        <a href="#" onclick="openWindow('window4')">Calc</a>
+        <div id="clock" class="clock"></div>
+    </div>
 
-        a {
-            color: #0000ff;
-            text-decoration: underline;
-        }
+    <!--Window 1 - Welcome to 746a-->
+    <div class="window" id="window1">
+        <div class="header" onmousedown="startDrag(event, 'window1')"> <span class="close-btn"
+                onclick="closeWindow('window1')">X</span>Welcome to 746a</div>
 
-        li {
-            margin-bottom: 2%;
-        }
-
-    </style>
+        <div class="content">
+            <img src="images/746abox.png" alt="Logo" class="logo">
+            <p><span class="tiny-text">A repo of odd creative diversions.</span></p>
+            <p><span class="tiny-text">Version 0.1</span></p>
+            <p><span class="tiny-text">† TJ Cosgrove</span></p>
+        </div>
+    </div>
 
 
-    <span class="title">746a</span>
+    <!--Window 2 - About-->
+    <div class="window" id="window2">
+        <div class="header" onmousedown="startDrag(event, 'window2')"> <span class="close-btn"
+                onclick="closeWindow('window2')">X</span>What is 746a?</div>
 
-    <h2>Project List</h2>
+        <div class="content">
+            <img src="images/Pareidolia.gif" alt="Logo" class="logo">
+            <p class="tiny-text">I build strange little things to intersect technology and creativity. Explore my weird
+                ideas, technical experiments, and projects that collide technology and creativity.</p>
+            <p class="tiny-text"><a class="linkie" href="mailto:hi.746a@icloud.com">hi.746a@icloud.com</a></p>
+        </div>
+    </div>
 
-    <h3>2022</h3>
-    <ul>
-        <li><a href="projects/REd.html">REΔ - A red reveal obfuscation writing window</a></li>
-        <li><a href="projects/nfc-read.html">NFC URL Reader - An experiment in NFC chip URL customisation</a></li>
-    </ul>
+    <!--Window 3 - Projects-->
+    <div class="window" id="window3">
+        <div class="header" onmousedown="startDrag(event, 'window3')"> <span class="close-btn"
+                onclick="closeWindow('window3')">X</span>Projects</div>
 
-    <h3>2024</h3>
-    <ul>
-        <li> colossOS - A fictional operating system for a giant computer (WIP)</li>
-    </ul>
+        <div class="content">
+            <!--✔︎✘⚙-->
+            <div class="content">
+                <table id="projectTable">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Description</th>
+                            <th>Year</th>
+                            <th>Genre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be generated here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-    <h3>2025</h3>
-    <ul>
-        <li><a href="projects/sop-scripts.html">SCRIPTS - Standard Creation of Repeatable Instructions and Procedure Templates System</a></li>
-    </ul>
-    
+    <!--Window 4 - Calculator-->
+    <div class="window" id="window4">
+        <div class="header" onmousedown="startDrag(event, 'window4')"> <span class="close-btn"
+                onclick="closeWindow('window4')">X</span>Calc</div>
+        <div class="content">
+            <div class="calculator">
+                <span id="calc-window" class="calc-window">0</span>
+                <button class="calc-btn" data-value="C">C</button>
+                <button class="calc-btn" data-value="E">E</button>
+                <button class="calc-btn" data-value="+">+</button>
+                <button class="calc-btn" data-value="*">*</button>
+
+                <button class="calc-btn" data-value="7">7</button>
+                <button class="calc-btn" data-value="8">8</button>
+                <button class="calc-btn" data-value="9">9</button>
+                <button class="calc-btn" data-value="/">/</button>
+
+                <button class="calc-btn" data-value="4">4</button>
+                <button class="calc-btn" data-value="5">5</button>
+                <button class="calc-btn" data-value="6">6</button>
+                <button class="calc-btn" data-value="-">-</button>
+
+                <button class="calc-btn" data-value="1">1</button>
+                <button class="calc-btn" data-value="2">2</button>
+                <button class="calc-btn" data-value="3">3</button>
+                <button class="calc-btn double-vertical" data-value="=">=</button>
+
+                <button class="calc-btn double-horizontal" data-value="0">0</button>
+                <button class="calc-btn" data-value=".">.</button>
+            </div>
+
+
+        </div>
+    </div>
+
+
 </body>
+
 </html>
