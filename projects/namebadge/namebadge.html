@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Badge</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap');
+
+        :root {
+            --primary: #000000;
+            --background: #f0f0f0;
+            --text: #333;
+            --text-muted: #666;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Doto", sans-serif;
+            background: #0000ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .badge {
+            position: absolute;
+            /* Changed from relative to absolute */
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            width: 320px;
+            height: 448px;
+            padding: 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: subtleWobble 10s ease-in-out infinite;
+        }
+
+        /* Notch */
+        .badge::before {
+            content: "";
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6rem;
+            height: 1rem;
+            background: #0000ff;
+            border-radius: 1rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+            z-index: 5;
+        }
+
+        .badge h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            margin-top: 4rem;
+            color: var(--primary);
+        }
+
+        .badge p {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .badge .field {
+            font-weight: bold;
+            color: var(--text);
+        }
+
+
+        @keyframes subtleWobble {
+            0% {
+                transform: rotate(0deg) translate(0, 0);
+            }
+
+            25% {
+                transform: rotate(2deg) translate(0, 2px);
+                /* Slight rotation and slight upward movement */
+            }
+
+            50% {
+                transform: rotate(-2deg) translate(0, -2px);
+                /* Slight opposite rotation and slight downward movement */
+            }
+
+            75% {
+                transform: rotate(2deg) translate(0, 2px);
+                /* Return to slight rotation and upward movement */
+            }
+
+            100% {
+                transform: rotate(0deg) translate(0, 0);
+                /* Return to original position */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="badge" id="badge">
+        <h1 id="name">Loading...</h1>
+        <h3><span class="field"></span> <span id="role">-</span></h3>
+        <p><span class="field"></span> <a id="email" href="#">mailto:</a></p>
+
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const encoded = params.get('data');
+
+        const nameEl = document.getElementById('name');
+        const roleEl = document.getElementById('role');
+        const emailEl = document.getElementById('email');
+
+        if (encoded) {
+            try {
+                const decoded = atob(encoded);
+                const [name, role, email] = decoded.split(',');
+
+                nameEl.textContent = name || 'Unknown';
+                roleEl.textContent = role || '-';
+                emailEl.textContent = email || '-';
+
+                // If an email is available, make it a clickable mailto link
+                if (email) {
+                    emailEl.setAttribute('href', `mailto:${email}`);
+                    emailEl.textContent = email;  // Set the email text for the link
+                }
+            } catch (e) {
+                nameEl.textContent = "Invalid data";
+                roleEl.textContent = "-";
+                emailEl.textContent = "-";
+            }
+        } else {
+            nameEl.textContent = "No data";
+            roleEl.textContent = "-";
+            emailEl.textContent = "-";
+        }
+    </script>
+
+
+
+</body>
+
+</html>

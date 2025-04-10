@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name Badge Creator</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap');
+
+        body {
+            font-family: "Arial", sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        input,
+        button {
+            width: 90%;
+            padding: 0.7rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #0000ff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            margin-top: 1rem;
+        }
+
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .link-container {
+            margin-top: 1rem;
+        }
+
+        .link-container a {
+            color: #007bff;
+            text-decoration: none;
+            word-break: break-word;
+        }
+
+        .link-container a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .btn-container button {
+            width: 45%;
+        }
+
+        .pixel {
+            font-family: 'Doto', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="pixel">Name Badge Creator</h1>
+        <input type="text" id="name" placeholder="Enter Name" />
+        <input type="text" id="role" placeholder="Enter Role" />
+        <input type="email" id="email" placeholder="Enter Email" />
+        <button onclick="generateBadge()">Generate Badge</button>
+
+        <div class="output">
+            <div class="link-container">
+                <a id="link" href="#" target="_blank"></a>
+            </div>
+            <div id="qrcode"></div>
+        </div>
+
+        <div class="btn-container">
+            <button id="copyBtn" onclick="copyToClipboard()">Copy Link</button>
+            <button id="downloadBtn" onclick="downloadQRCode()">Download QR</button>
+        </div>
+    </div>
+
+    <script>
+        function generateBadge() {
+            const name = document.getElementById('name').value.trim();
+            const role = document.getElementById('role').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            // Function to escape special characters to prevent XSS
+            function escapeHTML(str) {
+                return str.replace(/[&<>"'/]/g, function (char) {
+                    return {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#x27;',
+                        '/': '&#x2F;'
+                    }[char];
+                });
+            }
+
+            // Validate the inputs
+            if (name && role && email) {
+                const sanitizedName = escapeHTML(name);
+                const sanitizedRole = escapeHTML(role);
+                const sanitizedEmail = escapeHTML(email);
+
+                // Simple email validation
+                const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                if (!emailRegex.test(sanitizedEmail)) {
+                    alert("Please provide a valid email address.");
+                    return;
+                }
+
+                // Encode the data as base64
+                const data = `${sanitizedName},${sanitizedRole},${sanitizedEmail}`;
+                const encodedData = btoa(data);
+
+                // Generate the badge link
+                const badgeLink = `https://746a.github.io/projects/namebadge/namebadgemaker.html?data=${encodedData}`;
+                const linkElement = document.getElementById('link');
+                linkElement.href = badgeLink;
+                linkElement.textContent = badgeLink;
+
+                // Generate QR code
+                document.getElementById('qrcode').innerHTML = ''; // Clear previous QR code
+                new QRCode(document.getElementById("qrcode"), badgeLink);
+            } else {
+                alert("Please fill in all fields.");
+            }
+        }
+
+        function copyToClipboard() {
+            const linkElement = document.getElementById('link');
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(linkElement.href).then(() => {
+                    alert("Link copied to clipboard!");
+                }).catch(() => {
+                    alert("Failed to copy the link.");
+                });
+            } else {
+                // Fallback for older browsers
+                const range = document.createRange();
+                range.selectNode(linkElement);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand("copy");
+                window.getSelection().removeAllRanges();
+                alert("Link copied to clipboard!");
+            }
+        }
+
+        function downloadQRCode() {
+            const canvas = document.querySelector("#qrcode canvas");
+            if (canvas) {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL();
+                link.download = "QRCode.png";
+                link.click();
+            } else {
+                alert("QR code not generated yet!");
+            }
+        }
+    </script>
+
+</body>
+
+</html>
