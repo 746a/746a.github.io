@@ -6,17 +6,35 @@ let currentWindow = null;
 function startDrag(event, windowId) {
     isDragging = true;
     currentWindow = document.getElementById(windowId);
-    offsetX = event.clientX - currentWindow.getBoundingClientRect().left;
-    offsetY = event.clientY - currentWindow.getBoundingClientRect().top;
+    // Check if the event is a touch event or mouse event
+    if (event.type === 'mousedown') {
+        offsetX = event.clientX - currentWindow.getBoundingClientRect().left;
+        offsetY = event.clientY - currentWindow.getBoundingClientRect().top;
 
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', stopDrag);
+    } else if (event.type === 'touchstart') {
+        offsetX = event.touches[0].clientX - currentWindow.getBoundingClientRect().left;
+        offsetY = event.touches[0].clientY - currentWindow.getBoundingClientRect().top;
+
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('touchend', stopDrag);
+    }
 }
 
 function drag(event) {
     if (isDragging) {
-        currentWindow.style.left = event.clientX - offsetX + 'px';
-        currentWindow.style.top = event.clientY - offsetY + 'px';
+        let clientX, clientY;
+        if (event.type === 'mousemove') {
+            clientX = event.clientX;
+            clientY = event.clientY;
+        } else if (event.type === 'touchmove') {
+            clientX = event.touches[0].clientX;
+            clientY = event.touches[0].clientY;
+        }
+
+        currentWindow.style.left = clientX - offsetX + 'px';
+        currentWindow.style.top = clientY - offsetY + 'px';
     }
 }
 
@@ -24,13 +42,14 @@ function stopDrag() {
     isDragging = false;
     document.removeEventListener('mousemove', drag);
     document.removeEventListener('mouseup', stopDrag);
+    document.removeEventListener('touchmove', drag);
+    document.removeEventListener('touchend', stopDrag);
 }
-
 
 function openWindow(windowId) {
     var windowElement = document.getElementById(windowId);
     if (windowElement) {
-        windowElement.style.display = 'block'; // Hide the window
+        windowElement.style.display = 'block'; // Show the window
     }
 }
 
@@ -40,7 +59,6 @@ function closeWindow(windowId) {
         windowElement.style.display = 'none'; // Hide the window
     }
 }
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const updateClock = () => {
