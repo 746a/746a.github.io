@@ -1,0 +1,128 @@
+:root {
+    --darkgreen: #006400;
+    --lightgreen: #32cd32;
+
+    --darkorange: #ca7003;
+    --lightorange: #FFA500;
+
+    --darkblue: #4f4fb8;
+    --lightblue: #45b5ff;
+
+    --darkred: #600202;
+    --lightred: #f80000;
+
+    --bg-color: var(--darkgreen);
+    --fg-color: var(--lightgreen);
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.vignette-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 70%);
+}
+
+.screen {
+    background-color: var(--bg-color);
+    border: 0px solid #000000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; 
+    height: 100vh;
+}
+
+.scan-lines {
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient(transparent, transparent 1px, rgba(255, 255, 255, 0.1) 5px, rgba(255, 255, 255, 0.1) 8px);
+    position: absolute;
+    top: 0;
+    
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    -webkit-appearance: none;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--fg-color);
+    border-radius: 10px;
+}
+
+.txt::placeholder {
+    color: var(--fg-color);
+}
+
+.txt {
+    color: var(--fg-color);
+    opacity: 0.9;
+    background-color: #00000000;
+    font-family: 'Share Tech Mono', sans-serif;
+    font-size: 2vw;
+    text-align: left;
+    border: none;
+    z-index: 1;
+    pointer-events: auto;
+    outline: none;
+    resize: none;
+    width: 80%; 
+    height: 80%;
+    margin: 5px auto;
+}
+
+.infobox {
+    color: var(--fg-color);
+    opacity: 0.8;
+    background-color: #00000000;
+    font-family: 'Share Tech Mono', sans-serif;
+    font-size: 1.5vw;
+    text-align: left;
+    border: none;
+    outline: none;
+    resize: none;
+    line-height: 1.7;
+    width: 80%; 
+    padding-top: 2%;
+    margin: 5px auto; 
+}
+
+.brackets {
+    color: var(--fg-color);
+    opacity: 0.9;
+    background-color: #00000000;
+    font-family: 'Share Tech Mono', sans-serif;
+    font-size: 3.7vw;
+    text-align: center;
+    border: none;
+    outline: none;
+    resize: none;
+    width: 80%; 
+    margin: 5px auto;
+}
+
+.info-button {
+    color: var(--fg-color);
+    background-color: #00000000;
+    font-family: 'Share Tech Mono', sans-serif;
+    font-size: 1vw;
+    vertical-align: 2px;
+    border: 1px solid var(--fg-color);
+}
+
+.clicked{
+    border: 1px dotted var(--bg-color);
+}
