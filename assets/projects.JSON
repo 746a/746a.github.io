@@ -1,0 +1,23 @@
+[
+    {
+        "name": "REΔ",
+        "description": "A red reveal obfuscation writing window",
+        "year": "2022",
+        "genre": "Web, Writing",
+        "url": "https://746a.github.io/projects/REd.html"
+    },
+    {
+        "name": "S.C.R.I.P.T.S",
+        "description": "Standard Creation of Repeatable Instructions and Procedure Templates System",
+        "year": "2025",
+        "genre": "SOPs, Procedures",
+        "url": "https://746a.github.io/projects/sop-scripts.html"
+    },
+    {
+        "name": "planNET Terminal",
+        "description": "Planetary Network (PlaNET) Access Terminal Version 1.0",
+        "year": "2024",
+        "genre": "Retro, Writing, Fallout",
+        "url": "https://746a.github.io/projects/plaNET-terminal/term.html"
+    }
+]
