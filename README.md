@@ -1,19 +1,5 @@
-# A series of experiments and explorations.
+# A repo of odd creative diversions.
 
-### 2022
-- NFC URL Reader - An experiment in NFC chip URL customisation
-- REΔ - A red reveal text obfuscation writing window.
+<img src="/images/Paredoilia.gif" alt="The author? Or is it just static.>
 
-### 2024
-- colossOS - A fictional operating system for a giant computer (WIP)
-
-### 2025
-- S.C.R.I.P.T.S - Standard Creation of Repeatable Instructions and Procedure Templates System
-
-#### References
-
-
-**REΔ**
-- Dan Wilson - https://danielcwilson.com
-- The Red Reveal: Illusions on the Web Part 1
-- https://danielcwilson.com/blog/2018/02/optical-fun-red-reveal/
+<i>I build strange little things to intersect technology and creativity. Explore my weird ideas, technical experiments, and projects that collide technology and creativity.</i>
