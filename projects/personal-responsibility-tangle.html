@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Finger+Paint&display=swap" rel="stylesheet">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Responsibility Tangle</title>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false });
+        window.mermaid = mermaid;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .finger-paint-regular {
+            font-family: "Finger Paint", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            font-family: "Finger Paint", sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #explainer {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-bottom: 2%;
+            font-size: 1.2em;
+            font-weight: bold;
+
+        }
+
+        #totals {
+            display: block;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        #totalThings {
+            display: inline-block;
+            text-align: center;
+            color: #028121;
+        }
+
+        #totalInterconnections {
+            display: inline-block;
+            text-align: center;
+            color: #3059ef
+        }
+
+        #inputsGraphContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        #itemsContainerWrapper {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 250px;
+            min-width: 200px;
+        }
+
+        #buttonBox {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+
+        }
+
+        #itemsContainer {
+            width: 100%;
+        }
+
+        #graph {
+            flex: 2 1 500px;
+            min-width: 300px;
+            max-height: 100%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        input {
+            width: 90%;
+            box-sizing: border-box;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+
+        .removeBtn {
+            background-color: #ef3a30;
+            border-radius: 1000px;
+            border-style: none;
+            color: white;
+
+        }
+
+        H1 {
+            font-size: 4em;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        #buttonBox button {
+            flex: 1;
+            box-sizing: border-box;
+            margin: 5px;
+            padding: 8px 12px;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        #collapseBtn {
+            padding: 8px 16px;
+            font-size: 0.8em;
+            background-color: #c4c4c4;
+            color: #ffffff;
+            border-radius: 100px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s, color 0.2s;
+            margin-bottom: 2%;
+        }
+
+        #collapseBtn:hover {
+            background-color: #373737;
+            color: #fff;
+        }
+
+        #explainerContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #addItemBtn{
+            background-color: #E50000;
+        }
+
+        #generateBtn{
+            background-color: #770088;
+        }
+
+        #resetGraphBtn{
+            background-color: #028121;
+        }
+
+        #exportSvgBtn{
+            background-color: #FF8D00;
+        }
+
+        @media(max-width: 700px) {
+            #inputsGraphContainer {
+                flex-direction: column;
+            }
+
+            #explainer {
+                font-size: 0.9em;
+
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Personal Responsibility Tangle</h1>
+
+    <div id="explainerContainer" style="text-align: center; margin-bottom: 15px;">
+        <button id="collapseBtn">What's that?</button>
+        <div id="explainer" style="margin-top: 10px;">
+            Everyone is responsible for a number of different things. As the number of things you are responsible for
+            grows, so do the interconections between those things. More things, more interconnections! Every 2 items you
+            take responsibility for nearly quadruples the number of interconnections between those things.<br><br>For
+            example, you might need to look after your health, your family, your friends and your work.<br><br>4 things
+            means 6 interconnections (Health - Family, Health - Friends, Health - Work, Work - Family, Work - Friends,
+            Family - Friends)<br><br>Having responsiblities is not inherently bad, but being aware of your own capacity
+            is healthy and useful. Taking on <i>'just one more thing'</i> is actually taking on that thing and all of it's
+            interconnections, so be wary of how it might make you feel and what it might do to your schedule, social
+            life, family time and work commitments.<br><br>You can use this tool to visualise the things you care about
+            and the interconnections they have. This can help to place your energy and enthusiasm where it is most sustainable and productive.<br><br> The equation for the tangle is below.
+            <p>
+                \[
+                \frac{n(n-1)}{2}
+                \]
+                \[ \quad n = \text{number of things}
+                \]
+
+            </p>
+
+        </div>
+    </div>
+
+    <div id="totals">You have responsibility for <div id="totalThings">0 Things</div> with <div
+            id="totalInterconnections">0
+            Interconnections</div>
+    </div>
+    <br>
+
+    <div id="inputsGraphContainer">
+        <div id="itemsContainerWrapper">
+            <div id="buttonBox">
+                <button id="addItemBtn">Add Item</button>
+                <button id="generateBtn">Regenerate Graph</button>
+                <button id="resetGraphBtn">Untangle Graph</button>
+                <button id="exportSvgBtn">Download SVG</button>
+            </div>
+            <div id="itemsContainer"></div>
+        </div>
+        <div id="graph"></div>
+    </div>
+
+
+    <script>
+
+        let items = [];
+        const colors = [
+            '#e6194b', '#028121', '#ffe119', '#3059ef', '#f58231', '#911eb4', '#46f0f0', '#f032e6',
+            '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3',
+            '#808000', '#ffd8b1', '#000075', '#808080'
+        ];
+
+        function addItem(name = '') {
+            if (items.length >= 32) {
+                alert("Limit of 32 things reached, do less!");
+                return;
+            }
+            items.push(name || `Item${items.length + 1}`);
+            renderItems();
+            generateGraph();
+        }
+
+        function removeItem(index) {
+            items.splice(index, 1);
+            renderItems();
+            generateGraph();
+        }
+
+        function renderItems() {
+            const container = document.getElementById('itemsContainer');
+            container.innerHTML = '';
+            items.forEach((item, i) => {
+                const div = document.createElement('div');
+                div.className = 'field';
+                div.innerHTML = `
+            <input type="text" value="${item}" data-index="${i}" class="itemInput">
+            <button data-index="${i}" class="removeBtn">X</button>
+        `;
+                container.appendChild(div);
+            });
+
+            document.querySelectorAll('.itemInput').forEach(input => {
+                input.addEventListener('input', e => {
+                    items[parseInt(e.target.dataset.index)] = e.target.value;
+                });
+            });
+
+            document.querySelectorAll('.removeBtn').forEach(btn => {
+                btn.addEventListener('click', e => removeItem(parseInt(e.target.dataset.index)));
+            });
+        }
+
+        function sanitizeNodeName(name) {
+            return name.replace(/[^\w]/g, '_');
+        }
+
+        async function generateGraph() {
+            if (items.length === 0) return;
+
+            const sanitized = items.map(sanitizeNodeName);
+            let mermaidText = 'graph LR\n';
+
+            // Assign a class to each node with color
+            sanitized.forEach((node, i) => {
+                const color = colors[i % colors.length];
+                mermaidText += `${node}\n`;
+                mermaidText += `class ${node} node${i}\n`;
+                mermaidText += `classDef node${i} fill:${color},stroke:${color},stroke-width:2,color:white\n`;
+            });
+
+            // Add all pairwise double-headed arrows (default black)
+            let edgeCount = 0;
+            for (let i = 0; i < sanitized.length; i++) {
+                for (let j = i + 1; j < sanitized.length; j++) {
+                    mermaidText += `${sanitized[i]} <--> ${sanitized[j]}\n`;
+                    edgeCount++;
+                }
+            }
+
+            // Update totals
+            document.getElementById('totalThings').innerText = `${sanitized.length} Things`;
+            document.getElementById('totalInterconnections').innerText = `${edgeCount} Interconnections`;
+
+
+            const graphDiv = document.getElementById('graph');
+            graphDiv.innerHTML = '';
+            try {
+                const { svg } = await mermaid.render('generatedGraph', mermaidText);
+                graphDiv.innerHTML = svg;
+            } catch (e) {
+                graphDiv.innerHTML = 'Error rendering graph: ' + e.message;
+            }
+        }
+
+        // Initialise default items
+        ['Work', 'Health', 'Family', 'Friends'].forEach(addItem);
+
+        document.getElementById('addItemBtn').addEventListener('click', () => addItem());
+        document.getElementById('generateBtn').addEventListener('click', generateGraph);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateGraph();
+        });
+
+        document.getElementById('exportSvgBtn').addEventListener('click', () => {
+            const graphDiv = document.getElementById('graph');
+            const svgContent = graphDiv.innerHTML;
+            if (!svgContent.trim()) {
+                alert("No SVG to export!");
+                return;
+            }
+            const blob = new Blob([svgContent], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'personal-responsibility-tangle-graph.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('resetGraphBtn').addEventListener('click', () => {
+            items = ['Work', 'Health', 'Family', 'Friends'];
+            renderItems();
+            generateGraph();
+        });
+
+        // Hide explainer by default
+        explainer.style.display = 'none';
+        collapseBtn.addEventListener('click', () => {
+            if (explainer.style.display === 'none') {
+                explainer.style.display = 'block';
+                collapseBtn.textContent = "Ok cool";
+            } else {
+                explainer.style.display = 'none';
+                collapseBtn.textContent = "What's that?";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
