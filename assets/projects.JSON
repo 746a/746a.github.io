@@ -26,5 +26,12 @@
         "year": "2025",
         "genre": "Utility, QR Code, NFC Tag",
         "url": "https://746a.github.io/projects/namebadge/namebadgemaker.html"
+    },
+    {
+        "name": "Personal Responsibility Tangle",
+        "description": "Visualise the things and interconnections that make up your life.",
+        "year": "2025",
+        "genre": "Utility, Mapping, Mental Health, Graph",
+        "url": "https://746a.github.io/projects/personal-responsibility-tangle.html"
     }
 ]
