@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ToDo Slip Tracker</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background-color: white;
+      padding: 15px;
+      box-shadow:
+        3px 3px 0 #cecece;
+      border: 2px solid #000;
+      border-radius: 0;
+
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 55%;
+      padding: 5px;
+      margin-top: 5px;
+      font-family: monospace;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 10px;
+    }
+
+    li {
+      background-color: #eee;
+      margin-bottom: 5px;
+      padding: 5px;
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li button {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 2px 4px;
+      cursor: pointer;
+      font-family: monospace;
+      border-radius: 0px;
+    }
+
+    button {
+      border: none;
+      color: white;
+      background-color: black;
+      padding: 10px 50px 10px 50px;
+      font-weight: bold;
+      font-family: monospace;
+      box-shadow:
+        2px 2px 0 #cecece;
+      border: 2px solid #000;
+    }
+
+    canvas {
+      display: block;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <center>
+      <h2>ToDo Slip Generator</h2>
+    </center>
+
+    <details>
+      <summary>How To Use</summary>
+      <ul>
+        <li>Choose a suitable name for your task.</li>
+        <li>Write out each step, carefully thinking about every part of the process.</li>
+        <li>For Steps, Materials and Tools just type something then hit enter to add it to the list.</li>
+        <li>List items can be deleted with the red `X` on the right side.</li>
+        <li>Once completed, the list can be downloaded as a PNG with the button at the bottom.</li>
+        <li>May your lists be plentiful and your productivity maximised.</li>
+      </ul>
+    </details>
+
+
+    <hr>
+    <label>Task Name:<br>
+      <input type="text" id="taskName" placeholder="Enter task name">
+    </label>
+    <hr>
+    <label>Add Step:<br>
+      <input type="text" id="stepInput" placeholder="Enter step description">
+    </label>
+    <ul id="stepList"></ul>
+    <hr>
+    <label>Add Material:<br>
+      <input type="text" id="materialInput" placeholder="Enter material">
+    </label>
+    <ul id="materialList"></ul>
+    <hr>
+    <label>Add Tool:<br>
+      <input type="text" id="toolInput" placeholder="Enter tool">
+    </label>
+    <ul id="toolList"></ul>
+    <hr>
+    <canvas id="taskCanvas" width="450"></canvas>
+    <br>
+    <center>
+      <button onclick="downloadTask()">Download Task Slip</button>
+    </center>
+  </div>
+
+  <script>
+    const materials = [], tools = [], steps = [];
+    const materialInput = document.getElementById('materialInput');
+    const toolInput = document.getElementById('toolInput');
+    const stepInput = document.getElementById('stepInput');
+    const materialList = document.getElementById('materialList');
+    const toolList = document.getElementById('toolList');
+    const stepList = document.getElementById('stepList');
+    const canvas = document.getElementById('taskCanvas');
+    const ctx = canvas.getContext('2d');
+    const taskNameInput = document.getElementById('taskName');
+
+
+    function drawThickLine(y) {
+      ctx.lineWidth = 12;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+
+    function drawXLine(y) {
+      drawThinLine(y);
+      y += 13;
+      ctx.fillText(`XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`, 0, y);
+      y += 1;
+      drawThinLine(y);
+    }
+
+    function draw746aFooter(y) {
+      y += 100;
+      drawThinLine(y);
+      y += 16;
+      ctx.fillText(`⎝⎝⎝⎝⎝⎝⎝⎝⎝⎝⎝⎝⎝⎝⎝ ✦ 746a ${new Date().getFullYear()} ✦  ⎠⎠⎠⎠⎠⎠⎠⎠⎠⎠⎠⎠⎠⎠⎠⎠`, 0, y);
+      y += 4;
+      drawThinLine(y);
+    }
+
+    function drawThinLine(y) {
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+      ctx.lineWidth = 12;
+    }
+
+    function drawDashedLine(y) {
+      ctx.lineWidth = 5;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.lineWidth = 12;
+    }
+
+    function updateCanvasHeight() {
+      const baseHeight = 500;
+      const itemHeight = 30;
+      const totalItems = materials.length + tools.length + steps.length;
+      canvas.height = baseHeight + totalItems * itemHeight;
+    }
+
+    function updateTaskLog() {
+      updateCanvasHeight();
+      console.log("Canvas Height: " + canvas.height)
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'black';
+      ctx.font = '16px monospace';
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 12;
+
+      let y = 3;
+
+      drawXLine(y);
+      y += 40;
+
+      ctx.textAlign = 'center';
+      ctx.fillText('ToDo Slip Tracker', canvas.width / 2, y);
+      ctx.fillText('ToDo Slip Tracker', canvas.width / 2, y);
+      ctx.fillText('ToDo Slip Tracker', canvas.width / 2, y);
+      ctx.fillText('ToDo Slip Tracker', canvas.width / 2, y);
+      y += 15;
+
+      ctx.textAlign = 'start';
+      drawXLine(y);
+      y += 50;
+
+      ctx.fillText(`Task:`, 20, y);
+      ctx.fillText(`Task:`, 20, y);
+      ctx.fillText(`Task:`, 20, y);
+      ctx.fillText(`Task:`, 20, y);
+      y += 25;
+      ctx.fillText(`${taskNameInput.value || 'Untitled Task'}`, 20, y);
+      y += 25;
+
+      const now = new Date();
+      const dateStr = now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0') + ' ' +
+        String(now.getHours()).padStart(2, '0') + ':' +
+        String(now.getMinutes()).padStart(2, '0') + ':' +
+        String(now.getSeconds()).padStart(2, '0');
+      ctx.fillText(`Generated:`, 20, y);
+      ctx.fillText(`Generated:`, 20, y);
+      ctx.fillText(`Generated:`, 20, y);
+      ctx.fillText(`Generated:`, 20, y);
+      y += 25;
+      ctx.fillText(`${dateStr}`, 20, y);
+      y += 25;
+      drawThinLine(y);
+      y += 30;
+
+      function drawList(title, items) {
+        if (items.length === 0) return;
+        ctx.fillText(`${title}:`, 20, y);
+        ctx.fillText(`${title}:`, 20, y);
+        ctx.fillText(`${title}:`, 20, y);
+        ctx.fillText(`${title}:`, 20, y);
+        y += 25;
+        items.forEach(item => { ctx.fillText(`□ ${item}`, 40, y); y += 25; });
+        drawThinLine(y);
+        y += 30;
+      }
+
+      drawList('Steps', steps);
+      drawList('Materials', materials);
+      drawList('Tools', tools);
+
+      draw746aFooter(y)
+
+
+    }
+
+    // Generic function to add item
+    function addItem(inputEl, array, listEl) {
+      const value = inputEl.value.replace(/[<>]/g, '').replace(/["'`$]/g, '').trim();
+      if (!value) return;
+      array.push(value);
+      const li = document.createElement('li');
+      li.textContent = value;
+
+      const delBtn = document.createElement('button');
+      delBtn.textContent = 'X';
+      delBtn.onclick = () => {
+        const idx = array.indexOf(value);
+        if (idx > -1) array.splice(idx, 1);
+        listEl.removeChild(li);
+        updateTaskLog();
+      };
+      li.appendChild(delBtn);
+      listEl.appendChild(li);
+
+      inputEl.value = '';
+      updateTaskLog();
+    }
+
+    // Event listeners
+    materialInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); addItem(materialInput, materials, materialList); } });
+    toolInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); addItem(toolInput, tools, toolList); } });
+    stepInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); addItem(stepInput, steps, stepList); } });
+    taskNameInput.addEventListener('input', updateTaskLog);
+
+    function taskNameSanitiser(taskNameInput) {
+      return taskNameInput.value.replace(/[<>]/g, '').replace(/["'`$]/g, '').trim();
+    };
+
+    function downloadTask() {
+      const taskName = taskNameSanitiser(document.getElementById('taskName'));
+      const scale = 5;
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width * scale;
+      tempCanvas.height = canvas.height * scale;
+      const tempCtx = tempCanvas.getContext('2d');
+
+      const ISODateStr = new Date().toISOString().split('T')[0];
+
+      tempCtx.fillStyle = 'white';
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+      tempCtx.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
+
+      const link = document.createElement('a');
+      link.download = `${ISODateStr}-${taskName}-task-slip.png`;
+      link.href = tempCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Initial render
+    updateTaskLog();
+  </script>
+</body>
+
+</html>
