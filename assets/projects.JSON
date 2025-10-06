@@ -17,7 +17,7 @@
         "name": "S.C.R.I.P.T.S",
         "description": "Standard Creation of Repeatable Instructions and Procedure Templates System",
         "year": "2025",
-        "genre": "SOPs, Procedures",
+        "genre": "SOPs, Procedures, Utility",
         "url": "https://746a.github.io/projects/sop-scripts.html"
     },
     {
@@ -30,15 +30,22 @@
     {
         "name": "Personal Responsibility Tangle",
         "description": "Visualise the things and interconnections that make up your life.",
-        "year": "2025",
+        "year": "2025-09",
         "genre": "Utility, Mapping, Mental Health, Graph",
         "url": "https://746a.github.io/projects/personal-responsibility-tangle.html"
     },
     {
         "name": "EoWW",
         "description": "A weekly selection of curious things to reverse work week wwoe.",
-        "year": "2025",
+        "year": "2025-09",
         "genre": "Blog, Ideas, Links",
         "url": "https://746a.github.io/EoWW/"
+    },
+    {
+        "name": "ToDo Slip Generator",
+        "description": "A small receipt style ToDo Slip Generator.",
+        "year": "2025-10",
+        "genre": "Generator, ToDo, Utility, Receipt",
+        "url": "https://746a.github.io/projects/TDSG.html"
     }
 ]
