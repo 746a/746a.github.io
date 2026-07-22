@@ -288,34 +288,32 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
 
         function updateHTMLCoordinates() {
             const tempVector = new THREE.Vector3();
-            const cameraDir = new THREE.Vector3();
-            camera.getWorldDirection(cameraDir);
 
-            function updateElement(elem, pos, axisKey) {
+            function updateElement(elem, pos) {
+                if (sidebar.classList.contains('open')) {
+                    elem.style.display = 'none';
+                    return;
+                }
+
                 tempVector.copy(pos);
                 tempVector.project(camera);
-                
+
                 if (tempVector.z > 1) {
                     elem.style.display = 'none';
                     return;
                 }
-                
-                const vectorToLabel = pos.clone().sub(camera.position).normalize();
-                const depthFactor = vectorToLabel.dot(cameraDir);
-
                 elem.style.display = 'block';
 
                 const x = (tempVector.x * .5 + .5) * container.clientWidth;
                 const y = (tempVector.y * -.5 + .5) * container.clientHeight;
                 elem.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
-
-                elem.style.zIndex = Math.round((tempVector.z) * 1000);
             }
 
-            updateElement(labelActing, axisPositions.acting, 'acting');
-            updateElement(labelScript, axisPositions.script, 'script');
-            updateElement(labelVisuals, axisPositions.visuals, 'visuals');
+            updateElement(labelActing, axisPositions.acting);
+            updateElement(labelScript, axisPositions.script);
+            updateElement(labelVisuals, axisPositions.visuals);
         }
+
 
         function mapRange(val) {
             return ((val - 1) / 9) * 10 - 5;
@@ -343,7 +341,7 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
             const dataText = document.getElementById('data-input').value;
             const movies = parseCSV(dataText);
 
-            const sphereGeo = new THREE.SphereGeometry(0.4, 32, 32);
+            const sphereGeo = new THREE.SphereGeometry(0.5, 32, 32);
 
             movies.forEach(movie => {
                 const x = mapRange(movie.acting);
@@ -351,7 +349,7 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
                 const z = mapRange(movie.visuals);
 
                 const avgQuality = (movie.acting + movie.script + movie.visuals) / 3;
-                const hue = ((avgQuality - 1) / 9) * 0.33; 
+                const hue = ((avgQuality - 1) / 9) * 0.33;
 
                 const mat = new THREE.MeshStandardMaterial({
                     color: new THREE.Color().setHSL(hue, 0.9, 0.5),
@@ -400,16 +398,16 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
 
             raycaster.setFromCamera(mouse, camera);
             raycaster.params.Points.threshold = 0.5;
-            
+
             const intersects = raycaster.intersectObjects(interactiveMeshes);
 
             if (intersects.length > 0) {
                 const data = intersects[0].object.userData;
                 tooltip.style.display = 'block';
-                
+
                 let leftPos = clientX - rect.left + 15;
                 let topPos = clientY - rect.top + 15;
-                
+
                 if (leftPos + 220 > container.clientWidth) {
                     leftPos = clientX - rect.left - 230;
                 }
