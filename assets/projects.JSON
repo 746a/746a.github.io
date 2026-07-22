@@ -47,5 +47,12 @@
         "year": "2025-10",
         "genre": "Generator, ToDo, Utility, Receipt",
         "url": "https://746a.github.io/projects/TDSG.html"
+    },
+    {
+        "name": "MERVS: Movie Rating Vector Space",
+        "description": "Representing movie ratings in vector space.",
+        "year": "2026-07",
+        "genre": "Movies, Ratings, Vector, Mathematics",
+        "url": "https://746a.github.io/projects/movie-rating-vector-space.html"
     }
 ]
