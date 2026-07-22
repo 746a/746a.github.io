@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MERVS: Movie Rating Vector Space</title>
+    <title>MRVS: Movie Rating Vector Space</title>
     <style>
         * {
             box-sizing: border-box;
@@ -94,29 +94,31 @@
             position: absolute;
             color: #f8fafc;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 200;
             pointer-events: none;
             white-space: nowrap;
             transform: translate(-50%, -50%);
             font-family: ui-monospace, monospace;
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.15);
             padding: 4px 8px;
             border-radius: 4px;
             border: 1px solid #475569;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            z-index: 1;
         }
 
         #tooltip {
             position: absolute;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             border: 1px solid #475569;
-            padding: 8px 12px;
+            padding: 10px 14px;
             border-radius: 6px;
             font-size: 0.85rem;
             pointer-events: none;
             display: none;
             z-index: 100;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            max-width: 240px;
         }
 
         .credit {
@@ -181,8 +183,11 @@
 
     <div id="app">
         <div id="sidebar">
-            <h1>MERVS</h1>
-            <p>Paste/edit data points below (Title, Acting, Cinematography, Story scored 1 to 10):</p>
+            <h1>MRVS</h1>
+            <p><b>Movie Rating Vector Space</b></p>
+            <p>Paste/edit data points below</p>
+            <p>(Title, Acting, Cinematography, Story)</p>
+            <p>Scored 1 to 10</p>
             <textarea id="data-input">Terrible Everything,1,1,1
 Great Acting Only,10,1,1
 Great Cinematography Only,1,10,1
@@ -283,18 +288,33 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
 
         function updateHTMLCoordinates() {
             const tempVector = new THREE.Vector3();
+            const cameraDir = new THREE.Vector3();
+            camera.getWorldDirection(cameraDir);
 
-            function updateElement(elem, pos) {
+            function updateElement(elem, pos, axisKey) {
                 tempVector.copy(pos);
                 tempVector.project(camera);
+                
+                if (tempVector.z > 1) {
+                    elem.style.display = 'none';
+                    return;
+                }
+                
+                const vectorToLabel = pos.clone().sub(camera.position).normalize();
+                const depthFactor = vectorToLabel.dot(cameraDir);
+
+                elem.style.display = 'block';
+
                 const x = (tempVector.x * .5 + .5) * container.clientWidth;
                 const y = (tempVector.y * -.5 + .5) * container.clientHeight;
                 elem.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+
+                elem.style.zIndex = Math.round((tempVector.z) * 1000);
             }
 
-            updateElement(labelActing, axisPositions.acting);
-            updateElement(labelScript, axisPositions.script);
-            updateElement(labelVisuals, axisPositions.visuals);
+            updateElement(labelActing, axisPositions.acting, 'acting');
+            updateElement(labelScript, axisPositions.script, 'script');
+            updateElement(labelVisuals, axisPositions.visuals, 'visuals');
         }
 
         function mapRange(val) {
@@ -323,7 +343,7 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
             const dataText = document.getElementById('data-input').value;
             const movies = parseCSV(dataText);
 
-            const sphereGeo = new THREE.SphereGeometry(0.25, 32, 32);
+            const sphereGeo = new THREE.SphereGeometry(0.4, 32, 32);
 
             movies.forEach(movie => {
                 const x = mapRange(movie.acting);
@@ -379,13 +399,26 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
             mouse.y = -((clientY - rect.top) / container.clientHeight) * 2 + 1;
 
             raycaster.setFromCamera(mouse, camera);
+            raycaster.params.Points.threshold = 0.5;
+            
             const intersects = raycaster.intersectObjects(interactiveMeshes);
 
             if (intersects.length > 0) {
                 const data = intersects[0].object.userData;
                 tooltip.style.display = 'block';
-                tooltip.style.left = `${clientX - rect.left + 15}px`;
-                tooltip.style.top = `${clientY - rect.top + 15}px`;
+                
+                let leftPos = clientX - rect.left + 15;
+                let topPos = clientY - rect.top + 15;
+                
+                if (leftPos + 220 > container.clientWidth) {
+                    leftPos = clientX - rect.left - 230;
+                }
+                if (topPos + 100 > container.clientHeight) {
+                    topPos = clientY - rect.top - 110;
+                }
+
+                tooltip.style.left = `${leftPos}px`;
+                tooltip.style.top = `${topPos}px`;
                 tooltip.innerHTML = `<strong>${data.title}</strong><br>Acting: ${data.acting}<br>Cinematography: ${data.script}<br>Story: ${data.visuals}`;
                 container.style.cursor = 'pointer';
             } else {
@@ -395,6 +428,10 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
         }
 
         container.addEventListener('mousemove', (e) => {
+            handleInteraction(e.clientX, e.clientY);
+        });
+
+        container.addEventListener('click', (e) => {
             handleInteraction(e.clientX, e.clientY);
         });
 
