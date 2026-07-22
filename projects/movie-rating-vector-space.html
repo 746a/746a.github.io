@@ -24,6 +24,7 @@
             display: flex;
             width: 100vw;
             height: 100vh;
+            flex-direction: row;
         }
 
         #sidebar {
@@ -35,10 +36,11 @@
             padding: 20px;
             gap: 16px;
             z-index: 10;
+            transition: transform 0.3s ease;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin: 0;
             font-weight: 600;
             text-align: center;
@@ -63,11 +65,12 @@
             font-size: 0.85rem;
             resize: none;
             line-height: 1.5;
+            min-height: 120px;
         }
 
         button {
             background: #ffcc00;
-            color: white;
+            color: #0f172a;
             border: none;
             border-radius: 8px;
             padding: 12px;
@@ -77,12 +80,14 @@
         }
 
         button:hover {
-            background: #2563eb;
+            background: #e6b800;
         }
 
         #canvas-container {
             flex: 1;
             position: relative;
+            width: 100%;
+            height: 100%;
         }
 
         .axis-label {
@@ -119,14 +124,64 @@
             font-family: monospace;
             font-size: small;
         }
+
+        #toggle-btn {
+            display: none;
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            z-index: 20;
+            background: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            #app {
+                flex-direction: column;
+            }
+
+            #sidebar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                max-height: 100vh;
+                transform: translateY(-100%);
+                border-right: none;
+                border-bottom: 1px solid #334155;
+            }
+
+            #sidebar.open {
+                transform: translateY(0);
+            }
+
+            #toggle-btn {
+                display: block;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-top: 24px;
+            }
+        }
     </style>
 </head>
 
 <body>
 
+    <button id="toggle-btn">Menu / Data</button>
+
     <div id="app">
         <div id="sidebar">
-            <h1>MERVS: Movie Rating Vector Space</h1>
+            <h1>MERVS</h1>
             <p>Paste/edit data points below (Title, Acting, Cinematography, Story scored 1 to 10):</p>
             <textarea id="data-input">Terrible Everything,1,1,1
 Great Acting Only,10,1,1
@@ -166,6 +221,13 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
         const labelActing = document.getElementById('label-acting');
         const labelScript = document.getElementById('label-script');
         const labelVisuals = document.getElementById('label-visuals');
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            toggleBtn.textContent = sidebar.classList.contains('open') ? 'Close Menu' : 'Menu / Data';
+        });
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x0b0f19);
@@ -175,7 +237,7 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
         const controls = new OrbitControls(camera, renderer.domElement);
@@ -297,7 +359,13 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
             });
         }
 
-        document.getElementById('render-btn').addEventListener('click', buildVisualization);
+        document.getElementById('render-btn').addEventListener('click', () => {
+            buildVisualization();
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('open');
+                toggleBtn.textContent = 'Menu / Data';
+            }
+        });
 
         window.addEventListener('resize', () => {
             camera.aspect = container.clientWidth / container.clientHeight;
@@ -305,10 +373,10 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
             renderer.setSize(container.clientWidth, container.clientHeight);
         });
 
-        container.addEventListener('mousemove', (e) => {
+        function handleInteraction(clientX, clientY) {
             const rect = renderer.domElement.getBoundingClientRect();
-            mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
-            mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+            mouse.x = ((clientX - rect.left) / container.clientWidth) * 2 - 1;
+            mouse.y = -((clientY - rect.top) / container.clientHeight) * 2 + 1;
 
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(interactiveMeshes);
@@ -316,15 +384,25 @@ Mediocremaxxing,5.5,5.5,5.5</textarea>
             if (intersects.length > 0) {
                 const data = intersects[0].object.userData;
                 tooltip.style.display = 'block';
-                tooltip.style.left = `${e.clientX - rect.left + 15}px`;
-                tooltip.style.top = `${e.clientY - rect.top + 15}px`;
+                tooltip.style.left = `${clientX - rect.left + 15}px`;
+                tooltip.style.top = `${clientY - rect.top + 15}px`;
                 tooltip.innerHTML = `<strong>${data.title}</strong><br>Acting: ${data.acting}<br>Cinematography: ${data.script}<br>Story: ${data.visuals}`;
                 container.style.cursor = 'pointer';
             } else {
                 tooltip.style.display = 'none';
                 container.style.cursor = 'default';
             }
+        }
+
+        container.addEventListener('mousemove', (e) => {
+            handleInteraction(e.clientX, e.clientY);
         });
+
+        container.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
 
         buildVisualization();
 
