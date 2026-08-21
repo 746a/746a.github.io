@@ -1,132 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TTRPG Character Sheet</title>
-<style>
-:root {
---bg-color: #0f1115;
---card-bg: #1a1d24;
---border-color: #2a2e39;
---text-main: #f0f2f5;
---text-muted: #94a3b8;
---accent: #38bdf8;
-}
-body {
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-background-color: var(--bg-color);
-color: var(--text-main);
-margin: 0;
-padding: 1rem;
-display: flex;
-justify-content: center;
-align-items: center;
-min-height: 100vh;
-}
-.sheet-container {
-width: 100%;
-max-width: 480px;
-background-color: var(--card-bg);
-border: 1px solid var(--border-color);
-border-radius: 12px;
-padding: 1.5rem;
-box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-box-sizing: border-box;
-}
-h1 {
-margin-top: 0;
-margin-bottom: 0.5rem;
-font-size: 1.8rem;
-letter-spacing: -0.025em;
-}
-.stats-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 1rem;
-margin: 1.5rem 0;
-}
-.stat-box {
-background: rgba(255, 255, 255, 0.03);
-border: 1px solid var(--border-color);
-padding: 1rem;
-border-radius: 8px;
-text-align: center;
-}
-.stat-label {
-font-size: 0.85rem;
-color: var(--text-muted);
-text-transform: uppercase;
-letter-spacing: 0.05em;
-margin-bottom: 0.25rem;
-}
-.stat-value {
-font-size: 1.8rem;
-font-weight: 700;
-color: var(--accent);
-}
-.section-title {
-font-size: 0.9rem;
-color: var(--text-muted);
-text-transform: uppercase;
-letter-spacing: 0.05em;
-margin-bottom: 0.5rem;
-border-bottom: 1px solid var(--border-color);
-padding-bottom: 0.25rem;
-}
-.bio-box {
-font-size: 0.95rem;
-line-height: 1.6;
-color: #cbd5e1;
-background: rgba(0, 0, 0, 0.2);
-padding: 1rem;
-border-radius: 8px;
-white-space: pre-wrap;
-word-break: break-word;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Coin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- QR Code Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --border-color: #cbd5e1;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .sheet-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 32px;
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif-title {
+            font-family: 'Merriweather', serif;
+        }
+
+        header {
+            text-align: center;
+            border: 2px solid var(--border-color);
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .box {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 14px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .box-title {
+            font-size: .75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 800;
+        }
+
+        .box-content {
+            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 200;
+            word-break: break-word;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Share Dropdown Styling */
+        .share-container {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .share-toggle {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 12px 14px;
+            text-align: left;
+            font-family: 'Merriweather', serif;
+            font-size: 0.7rem;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .share-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.2s;
+        }
+
+        .share-container.active .share-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .share-content {
+            display: none;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            background: #f8fafc;
+        }
+
+        .share-container.active .share-content {
+            display: block;
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 10px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        #qrcode img {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .footer-payload {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            word-break: break-all;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
 </head>
+
 <body>
-<div class="sheet-container">
-<h1 id="char-name">Loading...</h1>
-<div class="stats-grid">
-<div class="stat-box">
-<div class="stat-label">Challenge (CL)</div>
-<div class="stat-value" id="char-cl">-</div>
-</div>
-<div class="stat-box">
-<div class="stat-label">Max Health (HP)</div>
-<div class="stat-value" id="char-hp">-</div>
-</div>
-</div>
-<div class="section-title">Backstory</div>
-<div class="bio-box" id="char-bio">No backstory recorded.</div>
-</div>
-<script>
-const urlParams = new URLSearchParams(window.location.search);
-const rawData = urlParams.get('data');
-if (rawData) {
-const parts = rawData.split('|');
-const data = {};
-parts.forEach(part => {
-const separatorIndex = part.indexOf(':');
-if (separatorIndex !== -1) {
-const key = part.substring(0, separatorIndex).trim().toLowerCase();
-const value = part.substring(separatorIndex + 1).trim();
-data[key] = decodeURIComponent(value);
-}
-});
-document.getElementById('char-name').innerText = data.name || 'Unknown Character';
-document.getElementById('char-cl').innerText = data.cl || '6';
-document.getElementById('char-hp').innerText = data.hp || '24';
-if (data.bio) {
-document.getElementById('char-bio').innerText = data.bio;
-}
-} else {
-document.getElementById('char-name').innerText = "No Save State Found";
-document.getElementById('char-bio').innerText = "Tap a valid character token to load stats.";
-}
-</script>
+
+    <div class="sheet-container">
+        <header>
+            <h1 id="char-name">Loading...</h1>
+            <p id="char-allegiance">Allegiance</p>
+        </header>
+
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title serif-title">Challenge Level</div>
+                <div class="box-content" id="char-cl">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Status</div>
+                <div class="box-content" id="char-status">-</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title serif-title">Origin Year</div>
+                <div class="box-content" id="char-oyr">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Health Points</div>
+                <div class="box-content" id="char-hp">-</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title serif-title">Languages</div>
+                <div class="box-content" id="char-languages">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Pronouns</div>
+                <div class="box-content" id="char-pronouns">-</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title serif-title">Origin Location</div>
+                <div class="box-content" id="char-oloc">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Trait</div>
+                <div class="box-content" id="char-trait">-</div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-title serif-title">Description</div>
+            <div class="box-content" id="char-description">-</div>
+        </div>
+
+        <div class="box">
+            <div class="box-title serif-title">Biography</div>
+            <div class="box-content" id="char-bio">-</div>
+        </div>
+
+        <!-- Click-to-Reveal Share Dropdown -->
+        <div class="share-container" id="shareContainer">
+            <button class="share-toggle serif-title" onclick="toggleShare()">Share Character Sheet</button>
+            <div class="share-content">
+                <div id="qrcode"></div>
+                <div class="footer-payload" id="payload-display">Reading URL payload...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample fallback URL matching your specified keys
+        const sampleUrl = "https://domain.com/c#name=Fname_Sname&challenge_level=7&hp=28&origin_year=1942_CE&origin_location=City,_Country&pronouns=She/Her&trait=Single_Trait&description=A_short_description_of_this_person's_physical_appearance_and_quirks&bio=This_person's_background_information_and_how_they_came_to_join_the_corporation&languages=English,French,Dutch&allegiance=The_Resistance&status=Active";
+
+        const targetUrl = (window.location.hash || window.location.search) ? window.location.href : sampleUrl;
+
+        try {
+            const urlObj = new URL(targetUrl);
+            const rawString = urlObj.hash ? urlObj.hash.substring(1) : urlObj.search.substring(1);
+            const params = new URLSearchParams(rawString);
+
+            const payloadMap = {
+                name: 'char-name',
+                challenge_level: 'char-cl',
+                hp: 'char-hp',
+                origin_year: 'char-oyr',
+                origin_location: 'char-oloc',
+                pronouns: 'char-pronouns',
+                trait: 'char-trait',
+                description: 'char-description',
+                bio: 'char-bio',
+                languages: 'char-languages',
+                allegiance: 'char-allegiance',
+                status: 'char-status'
+            };
+
+            for (const [key, elementId] of Object.entries(payloadMap)) {
+                if (params.has(key)) {
+                    const el = document.getElementById(elementId);
+                    if (el) {
+                        const val = decodeURIComponent(params.get(key).replace(/_/g, ' '));
+                        el.textContent = val;
+                    }
+                }
+            }
+
+            document.getElementById('payload-display').textContent = targetUrl;
+
+            // Generate QR code
+            new QRCode(document.getElementById("qrcode"), {
+                text: targetUrl,
+                width: 160,
+                height: 160,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+
+        } catch (e) {
+            document.getElementById('payload-display').textContent = "Error parsing URL payload.";
+        }
+
+        // Toggle dropdown behavior
+        function toggleShare() {
+            const container = document.getElementById('shareContainer');
+            container.classList.toggle('active');
+        }
+    </script>
 </body>
+
 </html>
