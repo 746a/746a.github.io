@@ -81,7 +81,7 @@
         }
 
         .box-title {
-            font-size: .75rem;
+            font-size: .6rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--text-muted);
@@ -93,7 +93,7 @@
             font-size: 1rem;
             color: var(--text-main);
             font-weight: 200;
-            word-break: break-word;
+            white-space: pre-line;
         }
 
         .grid-2 {
@@ -197,23 +197,42 @@
 
         <div class="grid-2">
             <div class="box">
+                <div class="box-title serif-title">Birth Year</div>
+                <div class="box-content" id="char-byr">-</div>
+            </div>
+            <div class="box">
                 <div class="box-title serif-title">Origin Year</div>
                 <div class="box-content" id="char-oyr">-</div>
             </div>
             <div class="box">
+                <div class="box-title serif-title">Objective Age</div>
+                <div class="box-content" id="char-oage">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Subjective Age</div>
+                <div class="box-content" id="char-sage">-</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="box">
                 <div class="box-title serif-title">Health Points</div>
                 <div class="box-content" id="char-hp">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Missions Completed</div>
+                <div class="box-content" id="char-mc">-</div>
             </div>
         </div>
 
         <div class="grid-2">
             <div class="box">
                 <div class="box-title serif-title">Languages</div>
-                <div class="box-content" id="char-languages">-</div>
+                <div class="box-content" id="char-lang">-</div>
             </div>
             <div class="box">
                 <div class="box-title serif-title">Pronouns</div>
-                <div class="box-content" id="char-pronouns">-</div>
+                <div class="box-content" id="char-pns">-</div>
             </div>
         </div>
 
@@ -230,7 +249,7 @@
 
         <div class="box">
             <div class="box-title serif-title">Description</div>
-            <div class="box-content" id="char-description">-</div>
+            <div class="box-content" id="char-des">-</div>
         </div>
 
         <div class="box">
@@ -249,9 +268,7 @@
     </div>
 
     <script>
-        // Sample fallback URL matching your specified keys
-        
-        const sampleUrl = "https://746a.github.io/projects/char-coins.html?name=Fname_Sname&challenge_level=7&hp=28&origin_year=1942_CE&origin_location=City,_Country&pronouns=She/Her&trait=Single_Trait&description=A_short_description_of_this_person's_physical_appearance_and_quirks&bio=This_person's_background_information_and_how_they_came_to_join_the_corporation&languages=English,French,Dutch&allegiance=The_Resistance&status=Active";
+        const sampleUrl = "https://746a.github.io/projects/char-coins.html?name=Jimmy_Fogler&cl=4&hp=16&byr=%2B1920&oyr=%2B1942&oage=22&sage=37&oloc=New York City,_USA&mc=0&pns=He%2FHim&trait=First_Trait%0ASecond_Trait&des=A_short_description_of_this_persons_physical_appearance_and_quirks&bio=This_persons_background_information_and_how_they_came_to_join_the_corporation&lang=English&allegiance=The Department of Extra-Liminal Timespace Affairs&status=Apprentice";
 
         const targetUrl = (window.location.hash || window.location.search) ? window.location.href : sampleUrl;
 
@@ -262,15 +279,19 @@
 
             const payloadMap = {
                 name: 'char-name',
-                challenge_level: 'char-cl',
+                cl: 'char-cl',
                 hp: 'char-hp',
-                origin_year: 'char-oyr',
-                origin_location: 'char-oloc',
-                pronouns: 'char-pronouns',
+                byr: 'char-byr',
+                oyr: 'char-oyr',
+                oage: 'char-oage',
+                sage: 'char-sage',
+                oloc: 'char-oloc',
+                mc: 'char-mc',
+                pns: 'char-pns',
                 trait: 'char-trait',
-                description: 'char-description',
+                des: 'char-des',
                 bio: 'char-bio',
-                languages: 'char-languages',
+                lang: 'char-lang',
                 allegiance: 'char-allegiance',
                 status: 'char-status'
             };
@@ -287,7 +308,6 @@
 
             document.getElementById('payload-display').textContent = targetUrl;
 
-            // Generate QR code
             new QRCode(document.getElementById("qrcode"), {
                 text: targetUrl,
                 width: 160,
@@ -301,7 +321,6 @@
             document.getElementById('payload-display').textContent = "Error parsing URL payload.";
         }
 
-        // Toggle dropdown behavior
         function toggleShare() {
             const container = document.getElementById('shareContainer');
             container.classList.toggle('active');
