@@ -14,10 +14,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --border-color: #cbd5e1;
-            --text-main: #0f172a;
+            --bg-color: #fbf0d7;
+            --card-bg: #ffffff44;
+            --border-color: #00000007;
+            --text-main: #0f172ada;
             --text-muted: #475569;
         }
 
@@ -108,7 +108,7 @@
             border: 1.5px solid var(--border-color);
             border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
         }
 
         .share-toggle {
@@ -141,7 +141,7 @@
             padding: 16px;
             border-top: 1px solid var(--border-color);
             text-align: center;
-            background: #f8fafc;
+            
         }
 
         .share-container.active .share-content {
@@ -184,16 +184,7 @@
             <p id="char-allegiance">Allegiance</p>
         </header>
 
-        <div class="grid-2">
-            <div class="box">
-                <div class="box-title serif-title">Challenge Level</div>
-                <div class="box-content" id="char-cl">-</div>
-            </div>
-            <div class="box">
-                <div class="box-title serif-title">Status</div>
-                <div class="box-content" id="char-status">-</div>
-            </div>
-        </div>
+
 
         <div class="grid-2">
             <div class="box">
@@ -201,16 +192,17 @@
                 <div class="box-content" id="char-byr">-</div>
             </div>
             <div class="box">
+                <div class="box-title serif-title">Trait</div>
+                <div class="box-content" id="char-trait">-</div>
+            </div>
+
+            <div class="box">
+                <div class="box-title serif-title">Origin Location</div>
+                <div class="box-content" id="char-oloc">-</div>
+            </div>
+            <div class="box">
                 <div class="box-title serif-title">Origin Year</div>
                 <div class="box-content" id="char-oyr">-</div>
-            </div>
-            <div class="box">
-                <div class="box-title serif-title">Objective Age</div>
-                <div class="box-content" id="char-oage">-</div>
-            </div>
-            <div class="box">
-                <div class="box-title serif-title">Subjective Age</div>
-                <div class="box-content" id="char-sage">-</div>
             </div>
         </div>
 
@@ -227,6 +219,17 @@
 
         <div class="grid-2">
             <div class="box">
+                <div class="box-title serif-title">Challenge Level</div>
+                <div class="box-content" id="char-cl">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Status</div>
+                <div class="box-content" id="char-status">-</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="box">
                 <div class="box-title serif-title">Languages</div>
                 <div class="box-content" id="char-lang">-</div>
             </div>
@@ -236,16 +239,8 @@
             </div>
         </div>
 
-        <div class="grid-2">
-            <div class="box">
-                <div class="box-title serif-title">Origin Location</div>
-                <div class="box-content" id="char-oloc">-</div>
-            </div>
-            <div class="box">
-                <div class="box-title serif-title">Trait</div>
-                <div class="box-content" id="char-trait">-</div>
-            </div>
-        </div>
+
+
 
         <div class="box">
             <div class="box-title serif-title">Description</div>
@@ -268,7 +263,7 @@
     </div>
 
     <script>
-        const sampleUrl = "https://746a.github.io/projects/char-coins.html?name=Jimmy_Fogler&cl=4&hp=16&byr=%2B1920&oyr=%2B1942&oage=22&sage=37&oloc=New York City,_USA&mc=0&pns=He%2FHim&trait=First_Trait%0ASecond_Trait&des=A_short_description_of_this_persons_physical_appearance_and_quirks&bio=This_persons_background_information_and_how_they_came_to_join_the_corporation&lang=English&allegiance=The Department of Extra-Liminal Timespace Affairs&status=Apprentice";
+        const sampleUrl = "https://746a.github.io/projects/char-coins.html?name=Jimmy_Fogler&cl=4&hp=16&byr=%2B1920&oyr=%2B1942&oloc=New York City,_USA&mc=0&pns=He%2FHim&trait=First_Trait&des=A_short_description_of_this_persons_physical_appearance_and_quirks&bio=This_persons_background_information_and_how_they_came_to_join_the_corporation&lang=English&allegiance=Department of Extra-Liminal Timespace Affairs&status=Apprentice";
 
         const targetUrl = (window.location.hash || window.location.search) ? window.location.href : sampleUrl;
 
@@ -283,8 +278,6 @@
                 hp: 'char-hp',
                 byr: 'char-byr',
                 oyr: 'char-oyr',
-                oage: 'char-oage',
-                sage: 'char-sage',
                 oloc: 'char-oloc',
                 mc: 'char-mc',
                 pns: 'char-pns',
