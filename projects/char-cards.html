@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Coin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- QR Code Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #fbf0d7;
+            --card-bg: #ffffff44;
+            --border-color: #00000007;
+            --text-main: #0f172ada;
+            --text-muted: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .sheet-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 32px;
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif-title {
+            font-family: 'Merriweather', serif;
+        }
+
+        header {
+            text-align: center;
+            border: 2px solid var(--border-color);
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .box {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 14px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .box-title {
+            font-size: .6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 800;
+        }
+
+        .box-content {
+            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 200;
+            white-space: pre-line;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 6px;
+        }
+
+        .share-container {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .share-toggle {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 12px 14px;
+            text-align: left;
+            font-family: 'Merriweather', serif;
+            font-size: 0.7rem;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .share-toggle::after {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.2s;
+        }
+
+        .share-container.active .share-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .share-content {
+            display: none;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .share-container.active .share-content {
+            display: block;
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 10px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        #qrcode img {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .footer-payload {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            word-break: break-all;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sheet-container">
+        <header>
+            <h1 id="char-name">Loading...</h1>
+            <p id="char-allegiance">Allegiance</p>
+        </header>
+
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title serif-title">Birth Year</div>
+                <div class="box-content" id="char-byr">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Trait</div>
+                <div class="box-content" id="char-trait">-</div>
+            </div>
+
+            <div class="box">
+                <div class="box-title serif-title">Origin Location</div>
+                <div class="box-content" id="char-oloc">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Origin Year</div>
+                <div class="box-content" id="char-oyr">-</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title serif-title">Health Points</div>
+                <div class="box-content" id="char-hp">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Missions Completed</div>
+                <div class="box-content" id="char-mc">-</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title serif-title">Challenge Level</div>
+                <div class="box-content" id="char-cl">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Status</div>
+                <div class="box-content" id="char-status">-</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title serif-title">Languages</div>
+                <div class="box-content" id="char-lang">-</div>
+            </div>
+            <div class="box">
+                <div class="box-title serif-title">Pronouns</div>
+                <div class="box-content" id="char-pns">-</div>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <div class="box">
+                <div class="box-title serif-title">Body</div>
+
+                <div class="grid-4">
+                    <!-- Row 0: Headers -->
+                    <div class="box">
+                        <div class="box-title serif-title">Slot</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-title serif-title">Durability</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-title serif-title">Trait</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-title serif-title">Material</div>
+                    </div>
+
+                    <!-- Row 1 - Head -->
+                    <div class="box">
+                        <div class="box-content">Head</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-1-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-1-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-1-3">-</div>
+                    </div>
+
+                    <!-- Row 2 - Brain -->
+                    <div class="box">
+                        <div class="box-content">Brain</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-2-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-2-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-2-3">-</div>
+                    </div>
+
+                    <!-- Row 3 - Eyes -->
+                    <div class="box">
+                        <div class="box-content">Eyes</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-3-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-3-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-3-3">-</div>
+                    </div>
+
+                    <!-- Row 4 - Ears -->
+                    <div class="box">
+                        <div class="box-content">Ears</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-4-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-4-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-4-3">-</div>
+                    </div>
+
+                    <!-- Row 5 - Mouth -->
+                    <div class="box">
+                        <div class="box-content">Mouth</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-5-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-5-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-5-3">-</div>
+                    </div>
+
+                    <!-- Row 6 - Left Arm -->
+                    <div class="box">
+                        <div class="box-content">Left Arm</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-6-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-6-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-6-3">-</div>
+                    </div>
+
+                    <!-- Row 7 - Right Arm -->
+                    <div class="box">
+                        <div class="box-content">Right Arm</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-7-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-7-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-7-3">-</div>
+                    </div>
+
+                    <!-- Row 8 - Torso -->
+                    <div class="box">
+                        <div class="box-content">Torso</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-8-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-8-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-8-3">-</div>
+                    </div>
+
+                    <!-- Row 9 - Heart -->
+                    <div class="box">
+                        <div class="box-content">Heart</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-9-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-9-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-9-3">-</div>
+                    </div>
+
+                    <!-- Row 10 - Left Leg -->
+                    <div class="box">
+                        <div class="box-content">Left Leg</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-10-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-10-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-10-3">-</div>
+                    </div>
+
+                    <!-- Row 11 - Right Leg -->
+                    <div class="box">
+                        <div class="box-content">Right Leg</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-11-1">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-11-2">-</div>
+                    </div>
+                    <div class="box">
+                        <div class="box-content" id="cell-11-3">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-title serif-title">Description</div>
+            <div class="box-content" id="char-des">-</div>
+        </div>
+
+        <div class="box">
+            <div class="box-title serif-title">Biography</div>
+            <div class="box-content" id="char-bio">-</div>
+        </div>
+
+        <!-- Click-to-Reveal Share Dropdown -->
+        <div class="share-container" id="shareContainer">
+            <button class="share-toggle serif-title" onclick="toggleShare()">Share Character Sheet</button>
+            <div class="share-content">
+                <div id="qrcode"></div>
+                <div class="footer-payload" id="payload-display">Reading URL payload...</div>
+                <button id="copy-btn" onclick="copyShareUrl()"
+                    style="margin-top: 10px; padding: 8px 14px; font-family: 'Merriweather', serif; font-size: 0.7rem; background: var(--card-bg); border: 1.5px solid var(--border-color); border-radius: 4px; cursor: pointer; color: var(--text-main);">Copy
+                    Share Link</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function copyShareUrl() {
+            navigator.clipboard.writeText(targetUrl).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = "Copied!";
+                setTimeout(() => {
+                    btn.textContent = "Copy Share Link";
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy URL: ', err);
+            });
+        }
+        const durabilityMap = {
+            "00": { text: "-", value: "-" },
+            "02": { text: "Fragile", value: "[1/1]" },
+            "03": { text: "Artifact", value: "[1/8]" },
+            "04": { text: "Overcharged", value: "[5/3]" },
+            "05": { text: "Weak", value: "[2/2]" },
+            "06": { text: "Solid", value: "[3/3]" },
+            "07": { text: "Standard", value: "[3/3]" },
+            "08": { text: "Stable", value: "[3/3]" },
+            "09": { text: "Robust", value: "[4/4]" },
+            "0A": { text: "Reinforced", value: "[5/5]" },
+            "0B": { text: "Upgraded", value: "[6/6]" },
+            "0C": { text: "Masterwork", value: "[7/7]" }
+        };
+
+        // Placeholder lookup map for traits (Column 2)
+        const traitMap = {
+            "00": "-",
+        };
+
+        const eraMaterialMap = {
+            "00": { era: "-", material: "-" },
+            "21": { era: "Dawn of Humanity", material: "Flint" },
+            "22": { era: "Dawn of Humanity", material: "Bone" },
+            "23": { era: "Dawn of Humanity", material: "Wood" },
+            "31": { era: "Stone Age", material: "Polished Stone" },
+            "32": { era: "Stone Age", material: "Clay" },
+            "33": { era: "Stone Age", material: "Woven Plants" },
+            "34": { era: "Stone Age", material: "Leather" },
+            "35": { era: "Stone Age", material: "Copper" },
+            "41": { era: "Ancient to Classical", material: "Bronze" },
+            "42": { era: "Ancient to Classical", material: "Iron" },
+            "43": { era: "Ancient to Classical", material: "Glass" },
+            "44": { era: "Ancient to Classical", material: "Papyrus" },
+            "45": { era: "Ancient to Classical", material: "Parchment" },
+            "46": { era: "Ancient to Classical", material: "Concrete" },
+            "47": { era: "Ancient to Classical", material: "Marble" },
+            "48": { era: "Ancient to Classical", material: "Silk" },
+            "49": { era: "Ancient to Classical", material: "Wool" },
+            "51": { era: "Medieval", material: "Cast Iron" },
+            "52": { era: "Medieval", material: "Steel" },
+            "53": { era: "Medieval", material: "Paper" },
+            "54": { era: "Medieval", material: "Porcelain" },
+            "55": { era: "Medieval", material: "Rubber" },
+            "61": { era: "Industrial", material: "Stainless Steel" },
+            "62": { era: "Industrial", material: "Aluminium" },
+            "63": { era: "Industrial", material: "Reinforced Concrete" },
+            "64": { era: "Industrial", material: "Plastic" },
+            "71": { era: "Modern Era", material: "Silicon" },
+            "72": { era: "Modern Era", material: "Carbon Fiber" },
+            "73": { era: "Modern Era", material: "Polymers" },
+            "74": { era: "Modern Era", material: "Titanium" },
+            "81": { era: "Near Future", material: "Graphene" },
+            "82": { era: "Near Future", material: "Programmable Matter" },
+            "83": { era: "Near Future", material: "Superconductors" },
+            "84": { era: "Near Future", material: "Bioplastic" },
+            "91": { era: "Post-Human", material: "Bio-Matter" },
+            "92": { era: "Post-Human", material: "Null Field Lattice" },
+            "93": { era: "Post-Human", material: "Adaptive Meta-Materials" },
+            "94": { era: "Post-Human", material: "Nanotech" },
+            "A1": { era: "Deep Earth", material: "Atomic Lattice" },
+            "A2": { era: "Deep Earth", material: "Polymeral Chains" },
+            "A3": { era: "Deep Earth", material: "Picotech" },
+            "B1": { era: "Terminal Earth", material: "Stellar Construct" },
+            "B2": { era: "Terminal Earth", material: "Isotopic Prisms" },
+            "B3": { era: "Terminal Earth", material: "Femtotech" },
+            "C1": { era: "Solar Death", material: "Timespace Fiber" },
+            "C2": { era: "Solar Death", material: "Zero Point Cell" },
+            "C3": { era: "Solar Death", material: "Attoparticles Portal" }
+        };
+
+        const sampleUrl = "https://746a.github.io/projects/char-coins.html?name=Jimmy_Fogler&cl=4&hp=16&byr=%2B1920&oyr=%2B1942&oloc=New York City,_USA&mc=0&pns=He%2FHim&trait=First_Trait&des=A_short_description&bio=This_persons_background&lang=English&allegiance=Department of Extra-Liminal Timespace Affairs&status=Apprentice&body=000000000000000000000000000000000000000000000000000000000000";
+
+        const targetUrl = (window.location.hash || window.location.search) ? window.location.href : sampleUrl;
+
+        try {
+            const urlObj = new URL(targetUrl);
+            const rawString = urlObj.hash ? urlObj.hash.substring(1) : urlObj.search.substring(1);
+            const params = new URLSearchParams(rawString);
+
+            const payloadMap = {
+                name: 'char-name',
+                cl: 'char-cl',
+                hp: 'char-hp',
+                byr: 'char-byr',
+                oyr: 'char-oyr',
+                oloc: 'char-oloc',
+                mc: 'char-mc',
+                pns: 'char-pns',
+                trait: 'char-trait',
+                des: 'char-des',
+                bio: 'char-bio',
+                lang: 'char-lang',
+                allegiance: 'char-allegiance',
+                status: 'char-status'
+            };
+
+            for (const [key, elementId] of Object.entries(payloadMap)) {
+                if (params.has(key)) {
+                    const el = document.getElementById(elementId);
+                    if (el) {
+                        const val = decodeURIComponent(params.get(key).replace(/_/g, ' '));
+                        el.textContent = val;
+                    }
+                }
+            }
+
+            // Parse Body Grid Payload (66 characters total for 11 rows * 3 columns)
+            if (params.has('body')) {
+                const bodyHex = params.get('body');
+                for (let r = 1; r <= 11; r++) {
+                    const startIndex = (r - 1) * 6;
+                    if (startIndex + 5 < bodyHex.length) {
+                        const dCode = bodyHex.substr(startIndex, 2);     // Durability code
+                        const tCode = bodyHex.substr(startIndex + 2, 2); // Trait code
+                        const mCode = bodyHex.substr(startIndex + 4, 2); // Material code
+
+                        // Update Durability cell (Col 1)
+                        const dEl = document.getElementById(`cell-${r}-1`);
+                        if (dEl) {
+                            const dData = durabilityMap[dCode] || { text: "-", value: "-" };
+                            dEl.textContent = dData.text !== "-" ? `${dData.text} ${dData.value}` : "-";
+                        }
+
+                        // Update Trait cell (Col 2)
+                        const tEl = document.getElementById(`cell-${r}-2`);
+                        if (tEl) {
+                            tEl.textContent = traitMap[tCode] || "-";
+                        }
+
+                        // Update Material cell (Col 3)
+                        const mEl = document.getElementById(`cell-${r}-3`);
+                        if (mEl) {
+                            const mData = eraMaterialMap[mCode] || { era: "-", material: "-" };
+                            mEl.textContent = mData.material !== "-" ? `${mData.material}` : "-";
+                        }
+                    }
+                }
+            }
+
+            document.getElementById('payload-display').textContent = targetUrl;
+
+            new QRCode(document.getElementById("qrcode"), {
+                text: targetUrl,
+                width: 160,
+                height: 160,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+
+        } catch (e) {
+            document.getElementById('payload-display').textContent = "Error parsing URL payload.";
+        }
+
+        function toggleShare() {
+            const container = document.getElementById('shareContainer');
+            container.classList.toggle('active');
+        }
+    </script>
+</body>
+
+</html>
